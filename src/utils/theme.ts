@@ -12,9 +12,20 @@ export const colors = {
   lemon: "#CEFFCC",
   grayBorder: "#EAECF0",
   black: "#000000",
+  darkAsh: "#292929",
+  white: "white",
 };
 
 export const taskManagementTheme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 575,
+      md: 768,
+      lg: 1199,
+      xl: 1536,
+    },
+  },
   palette: {
     primary: {
       main: "#7B1984",
