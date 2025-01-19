@@ -1,8 +1,10 @@
 import {
   Add,
   AddCircleOutline,
+  BorderColor,
   CheckBoxOutlineBlankOutlined,
   CheckCircle,
+  Delete,
   ExpandMore,
   MoreHorizOutlined,
   SubdirectoryArrowLeft,
@@ -15,22 +17,56 @@ import {
   Button,
   FormControl,
   Grid2,
+  Menu,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { LuGripVertical } from "react-icons/lu";
 import { calendar, searchNotFound } from "../../assets/assets.ts";
 import { commonStyles } from "../../utils/commonStyles.ts";
 import { colors } from "../../utils/theme.ts";
 import Header from "../header/Header.tsx";
 import { styles } from "./styles.ts";
+import { Category, TodoSelectingStatus, TodoStatus } from "./types.ts";
 
-type TODO_STATUS = "TO-DO" | "IN-PROGRESS" | "COMPLETED";
-const todoStatus = ["TO-DO", "IN-PROGRESS", "COMPLETED"];
+const todoStatus: TodoStatus[] = ["TO-DO", "IN-PROGRESS", "COMPLETED"];
+const categories: { key: Category; text: string }[] = [
+  {
+    key: "CATEGORY",
+    text: "Category",
+  },
+  {
+    key: "PERSONAL",
+    text: "Personal",
+  },
+  {
+    key: "WORK",
+    text: "Work",
+  },
+];
+const statusItems: { key: TodoSelectingStatus; text: string }[] = [
+  {
+    key: "STATUS",
+    text: "Status",
+  },
+  {
+    key: todoStatus[0],
+    text: "To Do",
+  },
+  {
+    key: todoStatus[1],
+    text: "In Progress",
+  },
+  {
+    key: todoStatus[2],
+    text: "Completed",
+  },
+];
 
 const searchNotFoundView = () => (
   <Stack
@@ -53,7 +89,53 @@ const searchNotFoundView = () => (
 );
 
 const Todos = () => {
-  const getLableAndBgColor = (todoType: TODO_STATUS) => {
+  const [internalAddStatus, setInternalAddStatus] =
+    useState<TodoSelectingStatus>("STATUS");
+  const [internalCategory, setInternalCategory] =
+    useState<Category>("CATEGORY");
+  const [anchorElForEdit, setAnchorElForEdit] = useState<null | HTMLElement>(
+    null
+  );
+  const [anchorElForStatus, setAnchorElForStatus] =
+    useState<null | HTMLElement>(null);
+  const [activeTodoEdit, setActiveTodoEdit] = useState<number>(-1);
+  const [activeTodoStatus, setActiveTodoStatus] = useState<number>(-1);
+
+  const handleClickForEdit = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    setAnchorElForEdit(event.currentTarget);
+    setActiveTodoEdit(id);
+  };
+
+  const handleClickForStatus = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    setAnchorElForStatus(event.currentTarget);
+    setActiveTodoStatus(id);
+  };
+
+  const handleCloseForEdit = () => {
+    setAnchorElForEdit(null);
+    setActiveTodoEdit(-1);
+  };
+
+  const handleCloseForStatus = () => {
+    setAnchorElForStatus(null);
+    setActiveTodoStatus(-1);
+  };
+
+  const todoEditHandler = (id: number) => {
+    handleCloseForEdit();
+  };
+
+  const todoDeleteHandler = (id: number) => {
+    handleCloseForEdit();
+  };
+
+  const getLableAndBgColor = (todoType: TodoStatus) => {
     switch (todoType) {
       case "TO-DO":
         return ["Todos", colors.pink];
@@ -63,7 +145,7 @@ const Todos = () => {
         return ["Completed", colors.lemon];
     }
   };
-  const getAccordion = (todoType: TODO_STATUS) => {
+  const getAccordion = (todoType: TodoStatus) => {
     const [lable, bgColor] = getLableAndBgColor(todoType);
     return (
       <Accordion
@@ -142,15 +224,17 @@ const Todos = () => {
                     <FormControl sx={styles.selectContainer}>
                       <Select
                         size="small"
-                        value={""}
+                        value={internalAddStatus}
+                        onChange={internalStatusChangeHandler}
                         displayEmpty
                         IconComponent={AddCircleOutline}
                         inputProps={{ "aria-label": "Without label" }}
                       >
-                        <MenuItem value="">Status</MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        {statusItems.map((each) => (
+                          <MenuItem key={each.key} value={each.key}>
+                            {each.text}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid2>
@@ -158,17 +242,19 @@ const Todos = () => {
                     <FormControl sx={styles.selectContainer}>
                       <Select
                         size="small"
-                        value={""}
+                        value={internalCategory}
+                        onChange={internalCategoryChangeHandler}
                         displayEmpty
                         IconComponent={AddCircleOutline}
                         inputProps={{ "aria-label": "Without label" }}
                       >
-                        <MenuItem value="">Category</MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                        {categories.map((each) => (
+                          <MenuItem key={each.key} value={each.key}>
+                            {each.text}
+                          </MenuItem>
+                        ))}
                       </Select>
-                    </FormControl>{" "}
+                    </FormControl>
                   </Grid2>
                 </Grid2>
                 <Stack direction={"row"} gap={3}>
@@ -189,7 +275,7 @@ const Todos = () => {
           )}
           {Array(6)
             .fill(0)
-            .map((each) => (
+            .map((each, index) => (
               <Grid2
                 container
                 mt={1}
@@ -220,7 +306,38 @@ const Todos = () => {
                   size={{ xs: 0, md: 2 }}
                   display={{ xs: "none", md: "block" }}
                 >
-                  <Typography sx={styles.todoStatus}>{todoType}</Typography>
+                  <Button
+                    id="basic-button-2"
+                    aria-controls={
+                      activeTodoStatus === index ? "basic-menu2" : undefined
+                    }
+                    aria-haspopup="true"
+                    aria-expanded={
+                      activeTodoStatus === index ? "true" : undefined
+                    }
+                    onClick={(event) => handleClickForStatus(event, index)}
+                  >
+                    <Typography sx={styles.todoStatus}>{todoType}</Typography>
+                  </Button>
+                  <Menu
+                    id="basic-menu2"
+                    anchorEl={anchorElForStatus}
+                    open={activeTodoStatus === index}
+                    onClose={handleCloseForStatus}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button-2",
+                    }}
+                  >
+                    <MenuItem onClick={handleCloseForStatus}>
+                      <Typography>TO DO</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseForStatus}>
+                      <Typography>IN-PROGRESS</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseForStatus}>
+                      <Typography>COMPLETED</Typography>
+                    </MenuItem>{" "}
+                  </Menu>
                 </Grid2>
                 <Grid2 size={{ xs: 2, md: 4 }}>
                   <Stack
@@ -234,13 +351,60 @@ const Todos = () => {
                     >
                       Work
                     </Typography>
-                    <MoreHorizOutlined
-                      sx={{ ...styles.inactiveIcons, color: colors.black }}
-                    />
+                    <Button
+                      id="basic-button"
+                      aria-controls={
+                        activeTodoEdit === index ? "basic-menu" : undefined
+                      }
+                      aria-haspopup="true"
+                      aria-expanded={
+                        activeTodoEdit === index ? "true" : undefined
+                      }
+                      onClick={(event) => handleClickForEdit(event, index)}
+                    >
+                      <MoreHorizOutlined
+                        sx={{ ...styles.inactiveIcons, color: colors.black }}
+                      />
+                    </Button>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorElForEdit}
+                      open={activeTodoEdit === index}
+                      onClose={handleCloseForEdit}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      <MenuItem>
+                        <Stack
+                          direction={"row"}
+                          alignItems={"center"}
+                          gap={1.5}
+                          onClick={() => todoEditHandler(index)}
+                        >
+                          <BorderColor sx={styles.editIcon()} />
+                          <Typography sx={styles.editText()}>Edit</Typography>
+                        </Stack>
+                      </MenuItem>
+                      <MenuItem>
+                        <Stack
+                          onClick={() => todoDeleteHandler(index)}
+                          direction={"row"}
+                          alignItems={"center"}
+                          gap={1.5}
+                        >
+                          <Delete sx={styles.editIcon(colors.red)} />
+                          <Typography sx={styles.editText(colors.red)}>
+                            Delete
+                          </Typography>
+                        </Stack>
+                      </MenuItem>
+                    </Menu>
                   </Stack>
                 </Grid2>
               </Grid2>
             ))}
+
           {false && (
             <Box height={"200px"} sx={commonStyles.centeredFlex}>
               <Typography
@@ -256,6 +420,17 @@ const Todos = () => {
         </AccordionDetails>
       </Accordion>
     );
+  };
+  const internalStatusChangeHandler = (
+    event: SelectChangeEvent<TodoSelectingStatus>
+  ) => {
+    setInternalAddStatus(event.target.value as TodoSelectingStatus);
+  };
+
+  const internalCategoryChangeHandler = (
+    event: SelectChangeEvent<Category>
+  ) => {
+    setInternalCategory(event.target.value as Category);
   };
 
   return (
@@ -288,7 +463,7 @@ const Todos = () => {
               </Grid2>
             </Grid2>
           </Box>
-          {todoStatus.map((each) => getAccordion(each as TODO_STATUS))}
+          {todoStatus.map((each) => getAccordion(each as TodoStatus))}
         </Box>
       )}
     </Box>
