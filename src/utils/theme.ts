@@ -17,6 +17,7 @@ export const colors = {
   white: "white",
   black2: "#2F2F2F",
   black3: "#00000099",
+  red: "#DA2F2F",
 };
 
 export const taskManagementTheme = createTheme({

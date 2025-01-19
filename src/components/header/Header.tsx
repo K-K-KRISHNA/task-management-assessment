@@ -1,7 +1,9 @@
+import { Close } from "@mui/icons-material";
 import {
   Avatar,
   Box,
   FormControl,
+  IconButton,
   Select,
   Stack,
   TextField,
@@ -213,6 +215,11 @@ const Header = () => {
                     height={"20px"}
                     mx={"5px"}
                   />
+                ),
+                endAdornment: (
+                  <IconButton>
+                    <Close />
+                  </IconButton>
                 ),
               },
             }}

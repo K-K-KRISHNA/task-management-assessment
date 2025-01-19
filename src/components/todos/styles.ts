@@ -78,4 +78,13 @@ export const styles = {
     fontSize: "14px",
   },
   addBtn: { borderRadius: "20px" },
+  editIcon: (color = colors.black) => ({
+    fontSize: "15px",
+    color,
+  }),
+  editText: (color = colors.black) => ({
+    color,
+    fontWeight: "600",
+    fontSize: "16px",
+  }),
 };
