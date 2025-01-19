@@ -9,3 +9,5 @@ export const listInactive = require("./listInactive.png");
 export const boardInactive = require("./boardInactive.png");
 export const logout = require("./logout.png");
 export const magnifier = require("./magnifier.png");
+export const calendar = require("./calendar.png");
+export const searchNotFound = require("./SearchNotFound.png");
