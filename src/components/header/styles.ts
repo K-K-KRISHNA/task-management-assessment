@@ -38,18 +38,18 @@ export const styles = {
       border: "solid 1.5px #0000006B",
       borderRadius: "30px",
       pl: "5px !important",
-      width: "204px",
+      width: { xs: "90vw", sm: "204px" },
       height: "36px",
       fieldset: {
         display: "none",
       },
     },
   },
-  addTaskBtn: {
-    width: "152px",
+  addTaskBtn: (width = "152px", height = "48px", fontSize = "14px") => ({
+    width,
+    height,
+    fontSize,
     borderRadius: "20px",
-    fontSize: "14px",
     fontWeight: "700",
-    height: "48px",
-  },
+  }),
 };

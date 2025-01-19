@@ -19,6 +19,7 @@ import {
   magnifier,
 } from "../../assets/assets.ts";
 import { colors } from "../../utils/theme.ts";
+import { commonStyles } from "./../../utils/commonStyles.ts";
 import { styles } from "./styles.ts";
 
 const Header = () => {
@@ -138,11 +139,25 @@ const Header = () => {
         </Button>
       </Stack>
       <Stack
-        display={{ xs: "none", md: "flex" }}
+        p={{ xs: 1, md: 0 }}
+        flexWrap={"wrap"}
         mt={2}
         direction={"row"}
         justifyContent={"space-between"}
       >
+        <Stack width={"100%"} flexDirection={"row"} justifyContent={"right"}>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              ...styles.addTaskBtn("86px", "32px", "10px"),
+              ...commonStyles.hideInWeb,
+            }}
+          >
+            ADD TASK
+          </Button>
+        </Stack>
+
         <Box
           display={"flex"}
           flexDirection={"row"}
@@ -203,7 +218,11 @@ const Header = () => {
               },
             }}
           />
-          <Button variant="contained" size="medium" sx={styles.addTaskBtn}>
+          <Button
+            variant="contained"
+            size="medium"
+            sx={{ ...styles.addTaskBtn(), ...commonStyles.hideInSmall }}
+          >
             ADD TASK
           </Button>
         </Box>
