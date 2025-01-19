@@ -119,7 +119,7 @@ const Header = () => {
               />
             }
           >
-            List
+            Board
           </Button>
         </Stack>
         <Button
@@ -157,7 +157,6 @@ const Header = () => {
             ADD TASK
           </Button>
         </Stack>
-
         <Box
           display={"flex"}
           flexDirection={"row"}
