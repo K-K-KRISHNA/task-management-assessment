@@ -1,3 +1,4 @@
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import { createTheme } from "@mui/material/styles";
 
 export const fontFamily = {
@@ -14,6 +15,8 @@ export const colors = {
   black: "#000000",
   darkAsh: "#292929",
   white: "white",
+  black2: "#2F2F2F",
+  black3: "#00000099",
 };
 
 export const taskManagementTheme = createTheme({
@@ -48,6 +51,20 @@ export const taskManagementTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 10,
+          textTransform: "capitalize",
+        },
+      },
+    },
+    MuiSelect: {
+      defaultProps: {
+        IconComponent: ExpandMore,
+      },
+      styleOverrides: {
+        root: {
+          fontSize: "12px",
+          color: colors.black3,
+          fontWeight: "600",
+          borderRadius: "20px",
         },
       },
     },
