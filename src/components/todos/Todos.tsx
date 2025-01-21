@@ -19,6 +19,7 @@ import {
   Grid2,
   Menu,
   MenuItem,
+  Modal,
   Select,
   SelectChangeEvent,
   Stack,
@@ -31,9 +32,9 @@ import { calendar, searchNotFound } from "../../assets/assets.ts";
 import { commonStyles } from "../../utils/commonStyles.ts";
 import { colors } from "../../utils/theme.ts";
 import Header from "../header/Header.tsx";
+import TodoForm from "../todoForm/TodoForm.tsx";
 import { styles } from "./styles.ts";
 import { Category, TodoSelectingStatus, TodoStatus } from "./types.ts";
-
 const todoStatus: TodoStatus[] = ["TO-DO", "IN-PROGRESS", "COMPLETED"];
 const categories: { key: Category; text: string }[] = [
   {
@@ -466,6 +467,9 @@ const Todos = () => {
           {todoStatus.map((each) => getAccordion(each as TodoStatus))}
         </Box>
       )}
+      <Modal open={true}>
+        <TodoForm />
+      </Modal>
     </Box>
   );
 };
