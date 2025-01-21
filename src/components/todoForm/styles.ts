@@ -34,7 +34,7 @@ export const styles = {
   },
   taskTitleField: {
     "& .MuiInputBase-root": {
-      borderRadius: "15px",
+      borderRadius: "10px",
       backgroundColor: "#F1F1F15C",
     },
   },
@@ -65,7 +65,6 @@ export const styles = {
     fontSize: "12px",
     color: "#00000099",
     fontWeight: "600",
-    mb: 1,
   },
   createDisabled: {
     "&.Mui-disabled": {
@@ -76,6 +75,6 @@ export const styles = {
       pointerEvents: "all",
     },
   },
-  calendarImg: { width: "25px", height: "25px" },
+  calendarImg: { width: "20px", height: "20px" },
   closeIcon: { position: "absolute", top: 25, right: 15 },
 };

@@ -87,4 +87,12 @@ export const styles = {
     fontWeight: "600",
     fontSize: "16px",
   }),
+  dateField:{
+    "& .MuiInputBase-root": {
+      borderRadius: "30px",
+      backgroundColor: "#F1F1F15C",
+      width: "140px",
+      fontSize: "14px",
+    },
+  }
 };

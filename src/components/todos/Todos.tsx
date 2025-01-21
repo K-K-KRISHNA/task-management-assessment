@@ -26,6 +26,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { Dayjs } from "dayjs";
 import React, { useState } from "react";
 import { LuGripVertical } from "react-icons/lu";
 import { calendar, searchNotFound } from "../../assets/assets.ts";
@@ -101,6 +106,7 @@ const Todos = () => {
     useState<null | HTMLElement>(null);
   const [activeTodoEdit, setActiveTodoEdit] = useState<number>(-1);
   const [activeTodoStatus, setActiveTodoStatus] = useState<number>(-1);
+  const [value, setValue] = useState<Dayjs | null>(null);
 
   const handleClickForEdit = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -200,26 +206,33 @@ const Todos = () => {
                     <TextField sx={styles.taskTitle} placeholder="Task Title" />
                   </Grid2>
                   <Grid2 size={{ xs: 0, md: 2 }}>
-                    <Stack
-                      gap={1}
-                      sx={styles.calendarOutline}
-                      direction={"row"}
-                      justifyContent={"center"}
-                      alignItems={"center"}
-                    >
-                      <Box
-                        component={"img"}
-                        src={calendar}
-                        sx={styles.calenderSize}
-                      />
-                      <Typography
-                        fontSize={"12px"}
-                        fontWeight={"600"}
-                        color={colors.black3}
-                      >
-                        Add date
-                      </Typography>
-                    </Stack>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DatePicker"]}>
+                        <Box sx={styles.dateField}>
+                          <DatePicker
+                            format="DD/MM/YYYY"
+                            value={value}
+                            onChange={(newValue) => setValue(newValue)}
+                            slots={{
+                              openPickerIcon: () => (
+                                <Box
+                                  component={"img"}
+                                  src={calendar}
+                                  sx={styles.calenderSize}
+                                />
+                              ),
+                            }}
+                            slotProps={{
+                              textField: {
+                                size: "small",
+                                fullWidth: true,
+                                placeholder: "Add Date",
+                              },
+                            }}
+                          />
+                        </Box>
+                      </DemoContainer>
+                    </LocalizationProvider>
                   </Grid2>
                   <Grid2 size={{ xs: 0, md: 2 }}>
                     <FormControl sx={styles.selectContainer}>
@@ -467,7 +480,7 @@ const Todos = () => {
           {todoStatus.map((each) => getAccordion(each as TodoStatus))}
         </Box>
       )}
-      <Modal open={true}>
+      <Modal open={false}>
         <TodoForm />
       </Modal>
     </Box>
