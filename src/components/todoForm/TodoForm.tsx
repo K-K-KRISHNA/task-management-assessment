@@ -10,6 +10,11 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { Dayjs } from "dayjs";
 import React, { ChangeEvent, useState } from "react";
 import { calendar } from "../../assets/assets.ts";
 import { commonStyles } from "./../../utils/commonStyles.ts";
@@ -29,6 +34,7 @@ const TodoForm = () => {
   const [taskStatus, setTaskStatus] = useState<ITypes["TaskStatus"]>("NONE");
   const [taskCategory, setTaskCategory] =
     useState<ITypes["TaskCategory"]>("NONE");
+  const [value, setValue] = useState<Dayjs | null>(null);
 
   const isWeb = useMediaQuery("(min-width:768px)");
 
@@ -110,26 +116,33 @@ const TodoForm = () => {
           </Box>
         </Grid2>
         <Grid2 size={{ xs: 12, md: 4 }}>
-          <Box>
-            <FormHelperText sx={styles.dueDateText}>Due On*</FormHelperText>
-            <TextField
-              size="small"
-              fullWidth
-              placeholder="DD/MM/YYYY"
-              sx={styles.taskTitleField}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <Box
-                      component={"img"}
-                      src={calendar}
-                      sx={styles.calendarImg}
-                    />
-                  ),
-                },
-              }}
-            />
-          </Box>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DatePicker", "DatePicker"]}>
+              <Box sx={styles.taskTitleField}>
+                <FormHelperText sx={styles.dueDateText}>Due On*</FormHelperText>
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  value={value}
+                  onChange={(newValue) => setValue(newValue)}
+                  slots={{
+                    openPickerIcon: () => (
+                      <Box
+                        component={"img"}
+                        src={calendar}
+                        sx={styles.calendarImg}
+                      />
+                    ),
+                  }}
+                  slotProps={{
+                    textField: {
+                      size: "small",
+                      fullWidth: true,
+                    },
+                  }}
+                />
+              </Box>
+            </DemoContainer>
+          </LocalizationProvider>
         </Grid2>
         <Grid2 size={{ xs: 12, md: 4 }}>
           <Box>
