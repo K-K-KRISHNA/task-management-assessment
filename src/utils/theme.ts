@@ -7,6 +7,7 @@ export const fontFamily = {
 };
 
 export const colors = {
+  primary: "#7B1984",
   gray: "#FFFAEA",
   pink: "#FAC3FF",
   blue: "#85D9F1",
